@@ -1,0 +1,63 @@
+snooze-till-graph-age-minutes: 100000
+prefix:
+  rdf: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+  dcat: http://www.w3.org/ns/dcat#
+  schema: https://schema.org/
+  org: http://www.w3.org/ns/org#
+  dct: http://purl.org/dc/terms/
+  mi: http://www.marineinfo.org/ns/ontology#
+assert:
+  - subjects:
+      literal:
+        - https://data.emobon.embrc.eu
+    paths:
+      - "schema:person / schema:name"
+  - subjects:
+      SPARQL: >
+        SELECT DISTINCT ?o
+        WHERE {
+              ?s schema:itemListElement ?o .
+              }
+    paths:
+      - "*"
+  - subjects:
+      SPARQL: >
+        SELECT DISTINCT ?o
+        WHERE {
+              ?s schema:hasPart ?o .
+              FILTER regex(str(?o), ".*\\.ttl$")
+              }
+    paths:
+      - "*"
+  - subjects:
+      SPARQL: >
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX sosa: <http://www.w3.org/ns/sosa/>
+        SELECT DISTINCT ?unit
+        WHERE  {
+          ?observations a sosa:Observation .
+            ?observations sosa:observedProperty ?property .
+            ?observationresult <http://qudt.org/schema/qudt/unit> ?unit .
+            ?observationresult <http://qudt.org/schema/qudt/numericValue> ?resultnumeric .
+            ?observations sosa:hasResult ?observationresult .
+            ?observations sosa:hasFeatureOfInterest ?sample .
+            ?sample sosa:hasResult ?metadatasample .
+        }
+    paths:
+      - "*"
+  - subjects:
+      SPARQL: >
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX sosa: <http://www.w3.org/ns/sosa/>
+        SELECT DISTINCT ?property
+        WHERE  {
+          ?observations a sosa:Observation .
+            ?observations sosa:observedProperty ?property .
+            ?observationresult <http://qudt.org/schema/qudt/unit> ?unit .
+            ?observationresult <http://qudt.org/schema/qudt/numericValue> ?resultnumeric .
+            ?observations sosa:hasResult ?observationresult .
+            ?observations sosa:hasFeatureOfInterest ?sample .
+            ?sample sosa:hasResult ?metadatasample .
+        }
+    paths:
+      - "*"
